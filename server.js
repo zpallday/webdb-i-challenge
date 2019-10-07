@@ -32,8 +32,45 @@ server.get('/api/accounts/:id', (req, res) => {
         })
     })
 
+    server.post('/api/accounts', (req, res) => {
+        const account = req.body;
+        if (!account.name || !account.budget) {
+            res.status(400).json({Hello: 'Yeel'})
+        } else {
+            db("accounts")
+            .insert(account)
+            .then( account => {
+                res.status(200).json(account)
+            })
+            .catch(error => {
+                res.status(500).json({err: error})
+            })
+        }
+    })
 
+    server.put('/api/accounts/:id', (req, res) => {
+        db('accounts') 
+        .where({id: req.params.id})
+        .update(req.body)
+        .then(count => {
+            res.status(200).json(count)
+        })
+        .catch(error => {
+            res.status(500).json(error)
+        })
+        });
 
+        server.delete('/api/accounts/:id', (req, res) => {
+            db('accounts') 
+            .where({id: req.params.id})
+            .del()
+            .then(count => {
+                res.status(200).json(count)
+            })
+            .catch(error => {
+                res.status(500).json(error)
+            })
+        });
 
 
 module.exports = server;
